@@ -1,0 +1,19 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - curl 
+  - openssh-server
+  - ca-certificates
+  - tzdata
+  - perl
+  # - postfix SMTP solution for gitlab_instance, we can install after gitlab has been installed.
+write_files:
+  - path: /tmp/gitlab_bootstrap.sh
+    content: |
+      set x
+      # wait cloud-init
+      cloud-init status --wait
+      sudo EXTERNAL_URL="$1" GITLAB_ROOT_PASSWORD="$2" apt-get install gitlab-ee
+runcmd:
+  - sudo chown 1000:1000 /tmp/gitlab_bootstrap.sh && sudo chmod +x /tmp/gitlab_bootstrap.sh
+  - curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash 
