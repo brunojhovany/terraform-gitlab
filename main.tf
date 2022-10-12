@@ -23,7 +23,10 @@ resource "aws_instance" "gitlab_instance" {
     inline = [
       "cd /tmp",
       "sudo chmod +x gitlab_bootstrap.sh",
-      "sudo /bin/bash -c ./gitlab_bootstrap.sh ${self.public_dns} ${var.gitlab_root_password}"
+      "sudo /bin/bash -c ./gitlab_bootstrap.sh ${self.public_dns} ${var.gitlab_root_password}",
+      "sudo sed -i \"s,external_url .*,external_url 'http://${self.private_ip}',\" /etc/gitlab/gitlab.rb",
+      "sudo echo \"gitlab_rails['initial_root_password'] = \"${var.gitlab_root_password}\"\"  | sudo tee -a /etc/gitlab/gitlab.rb",
+      "sudo gitlab-ctl reconfigure"
     ]
   }
   tags = {

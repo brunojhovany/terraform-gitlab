@@ -17,3 +17,10 @@ data "aws_ami" "ubuntu" {
 data "http" "clientip" {
   url = "https://ipv4.icanhazip.com/"
 }
+
+data "external" "registration_token" {
+  program = ["${path.module}/registration_token.sh", "${aws_instance.gitlab_instance.public_ip}"]
+  depends_on = [
+    aws_instance.gitlab_instance
+  ]
+}
