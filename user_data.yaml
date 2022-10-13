@@ -10,10 +10,14 @@ packages:
 write_files:
   - path: /tmp/gitlab_bootstrap.sh
     content: |
-      set x
+      #!/bin/bash
       # wait cloud-init
       cloud-init status --wait
-      sudo EXTERNAL_URL="$1" GITLAB_ROOT_PASSWORD="$2" apt-get install gitlab-ee
+      EXTERNAL_URL="$1" GITLAB_ROOT_PASSWORD="$2" apt-get install gitlab-ee 
+      sed -i "s,external_url .*,external_url 'http://$1'," /etc/gitlab/gitlab.rb
+      echo "gitlab_rails['initial_root_password'] = \"$2\"" | sudo tee -a /etc/gitlab/gitlab.rb
+      gitlab-ctl reconfigure
+
 runcmd:
   - sudo chown 1000:1000 /tmp/gitlab_bootstrap.sh && sudo chmod +x /tmp/gitlab_bootstrap.sh
   - curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash 
