@@ -33,7 +33,7 @@ resource "aws_instance" "gitlab_instance" {
 
 resource "aws_instance" "gitlab_runner" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_size
+  instance_type = var.instance_gitlab_runner_size
   user_data     = file("user_data_runner.yaml")
   key_name      = var.project_key
   vpc_security_group_ids = [
@@ -41,9 +41,9 @@ resource "aws_instance" "gitlab_runner" {
   ]
 
   root_block_device {
-    volume_size           = var.instnace_root_volume_size
-    volume_type           = var.instance_root_volume_type
-    delete_on_termination = var.instance_root_volume_delete_on_termination
+    volume_size           = var.instnace_gitlab_runner_root_volume_size
+    volume_type           = var.instance_gitlab_runner_root_volume_type
+    delete_on_termination = var.instance_gitlab_runner_root_volume_delete_on_termination
   }
   connection {
     type        = "ssh"
@@ -56,7 +56,7 @@ resource "aws_instance" "gitlab_runner" {
     inline = [
       "cd /tmp",
       "sudo chmod +x gitlab_runner_bootstrap.sh",
-      "sudo ./gitlab_runner_bootstrap.sh ${aws_instance.gitlab_instance.public_dns} ${data.external.registration_token.result.registration_token}" 
+      "sudo ./gitlab_runner_bootstrap.sh ${aws_instance.gitlab_instance.public_dns} ${data.external.registration_token.result.registration_token}"
     ]
   }
   tags = {

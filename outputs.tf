@@ -7,5 +7,5 @@ output "instance_public_ip" {
 }
 
 output "registration_token" {
- value = data.external.registration_token.result.registration_token
+  value = data.external.registration_token.result.registration_token
 }

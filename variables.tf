@@ -21,9 +21,9 @@ variable "gitlab_root_password" {
   description = "gitlab root user password"
 }
 
-variable "webfocus_role" {
+variable "role_arn" {
   type        = string
-  description = "arn webfocus role"
+  description = "arn aim role"
 }
 
 variable "instance_size" {
@@ -45,6 +45,29 @@ variable "instance_root_volume_type" {
 }
 
 variable "instance_root_volume_delete_on_termination" {
+  default     = true
+  description = "Delete the root volume on instance termination."
+}
+
+variable "instance_gitlab_runner_size" {
+  type        = string
+  default     = "c5.xlarge"
+  description = "The EC2 instance size"
+}
+
+variable "instnace_gitlab_runner_root_volume_size" {
+  type        = string
+  default     = "15"
+  description = "The volume size for the root volume in GiB"
+}
+
+variable "instance_gitlab_runner_root_volume_type" {
+  type        = string
+  default     = "gp3"
+  description = "The type of data storage: standard, gp2, io1"
+}
+
+variable "instance_gitlab_runner_root_volume_delete_on_termination" {
   default     = true
   description = "Delete the root volume on instance termination."
 }
