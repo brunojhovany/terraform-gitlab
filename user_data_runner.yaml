@@ -8,7 +8,6 @@ packages:
   - perl
   - docker.io
   - git
-  # - postfix SMTP solution for gitlab_instance, we can install after gitlab has been installed.
 write_files:
   - path: /tmp/gitlab_runner_bootstrap.sh
     content: |
@@ -16,9 +15,13 @@ write_files:
       # wait cloud-init
       cloud-init status --wait
       gitlab-runner register --non-interactive --url http://$1/ --registration-token $2 --executor "docker" --docker-image alpine:latest --description "docker-runner" --maintenance-note "Free-form maintainer notes about this runner" --tag-list "docker,aws" --run-untagged="true" --locked="false" --access-level="not_protected"
+      sudo sed -i "s/privileged = .*/privileged = true/" /etc/gitlab-runner/config.toml
+      sudo gitlab-runner restart
+
 runcmd:
   - sudo curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
   - sudo chmod +x /usr/local/bin/gitlab-runner
   - sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
   - sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+  - sudo usermod -aG docker gitlab-runner
   - sudo gitlab-runner start

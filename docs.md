@@ -51,3 +51,4 @@ No modules.
 | <a name="output_instance_public_dns"></a> [instance\_public\_dns](#output\_instance\_public\_dns) | n/a |
 | <a name="output_instance_public_ip"></a> [instance\_public\_ip](#output\_instance\_public\_ip) | n/a |
 | <a name="output_registration_token"></a> [registration\_token](#output\_registration\_token) | n/a |
+| <a name="output_runner_public_ip"></a> [runner\_public\_ip](#output\_runner\_public\_ip) | n/a |
